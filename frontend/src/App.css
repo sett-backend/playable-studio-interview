@@ -173,37 +173,13 @@ header {
   height: 56px;
   padding: 0 24px;
   border-bottom: 1px solid var(--ink);
+  box-shadow: inset 0 -6px 0 var(--pastel-pink);
   display: flex;
   align-items: center;
   gap: 12px;
   box-sizing: border-box;
   background: #ffffff;
 }
-
-.brand-highlight {
-  background-image: linear-gradient(var(--pastel-pink), var(--pastel-pink));
-  background-repeat: no-repeat;
-  background-position: 0 85%;
-  background-size: 100% 38%;
-  padding: 0 2px;
-}
-
-.header-flag {
-  display: inline-flex;
-  gap: 3px;
-  border: 1px solid var(--ink);
-  padding: 3px;
-  box-shadow: 2px 2px 0 var(--ink);
-  background: #fff;
-}
-.header-flag > span {
-  width: 6px;
-  height: 14px;
-  display: block;
-}
-.header-flag > span:nth-child(1) { background: var(--pastel-pink); }
-.header-flag > span:nth-child(2) { background: var(--soft-orange); }
-.header-flag > span:nth-child(3) { background: var(--pastel-blue); }
 
 .header-beta {
   font-size: 10px;
@@ -216,18 +192,6 @@ header {
   padding: 3px 8px;
   box-shadow: 2px 2px 0 var(--ink);
   margin-left: auto;
-}
-
-.header-kbd {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--ink);
-  background: #fff;
-  border: 1px solid var(--ink);
-  border-radius: 6px;
-  padding: 3px 8px;
-  box-shadow: 2px 2px 0 var(--ink);
 }
 
 .header-dot {
