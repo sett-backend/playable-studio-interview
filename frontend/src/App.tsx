@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { PlayablePreview } from "./PlayablePreview";
 
 type Role = "user" | "assistant";
@@ -231,7 +233,13 @@ function MessageBubble({ message: m, streaming }: { message: Message; streaming:
         </details>
       )}
       {m.text ? (
-        m.text
+        m.role === "assistant" ? (
+          <div className="markdown">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
+          </div>
+        ) : (
+          m.text
+        )
       ) : streaming ? (
         <span className="thinking-placeholder">
           Thinking<span className="dot-pulse"></span>
