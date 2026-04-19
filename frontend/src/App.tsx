@@ -185,6 +185,7 @@ function handleSse(block: string, updateLast: (m: (msg: Message) => Message) => 
 function MessageBubble({ message: m, streaming }: { message: Message; streaming: boolean }) {
   return (
     <div className={`msg-row ${m.role}`}>
+      <div className="msg-label">{m.role === "user" ? "You" : "Sett AI"}</div>
       <div className={`msg ${m.role}`}>
         {m.text ? (
           m.role === "assistant" ? (

@@ -41,8 +41,30 @@ export function PlayablePreview() {
   return (
     <div className="preview-root">
       <div className="preview-toolbar">
-        <span className="preview-url">{info.url}</span>
-        <button onClick={() => setIframeKey((k) => k + 1)}>Reload</button>
+        <div className="preview-title">
+          <h2>Modified Playable</h2>
+          <span className="preview-url">Running on {info.url}</span>
+        </div>
+        <button
+          className="reload-btn"
+          onClick={() => setIframeKey((k) => k + 1)}
+          aria-label="Reload"
+          title="Reload"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M21 12a9 9 0 1 1-3-6.7" />
+            <path d="M21 3v6h-6" />
+          </svg>
+        </button>
       </div>
       <div className="preview-stage">
         <div className="preview-frame" style={{ aspectRatio: String(ratio) }}>
