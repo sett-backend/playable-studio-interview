@@ -267,29 +267,42 @@ header h1 {
 }
 
 .msg.assistant {
-  background: #1a1a1a;
-  color: #ffffff;
-  font-size: 15px;
-  font-weight: 500;
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 400;
   line-height: 1.6;
-  box-shadow: 3px 3px 0 var(--soft-orange);
+  box-shadow: 2px 2px 0 var(--ink);
 }
 
-.msg.assistant .markdown a { color: #ffffff; }
-.msg.assistant .markdown code,
 .msg.assistant .markdown pre {
-  background: #2a2a2a;
-  border-color: #ffffff;
-  color: #ffffff;
+  background: #f0f4f8;
+  border: 1px solid var(--ink);
+  border-radius: 8px;
+  padding: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
-.msg.assistant .markdown blockquote {
-  border-left-color: #ffffff;
-  color: #ffffff;
+.msg.assistant .markdown code {
+  background: #f0f4f8;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
-.msg.assistant .markdown th,
-.msg.assistant .markdown td { border-color: #ffffff; }
-.msg.assistant .markdown th { background: #2a2a2a; }
-.msg.assistant .markdown hr { border-top-color: #ffffff; }
+.msg.assistant .markdown pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.msg-row.assistant .msg-label {
+  background: var(--pastel-pink);
+  border: 1px solid var(--ink);
+  border-radius: 99px;
+  padding: 2px 8px;
+  font-size: 10px;
+  opacity: 1;
+}
 
 
 .markdown > :first-child { margin-top: 0; }
