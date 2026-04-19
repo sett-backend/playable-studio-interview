@@ -137,10 +137,10 @@ async def chat_stream(req: ChatRequest):
                             is_error = getattr(block, "is_error", False)
                             content = str(getattr(block, "content", "") or "")
                             if is_error:
-                                _log(f"❌ Tool failed: {content[:400]}")
+                                truncated = content if len(content) <= 200 else content[:200] + "..."
+                                _log(f"❌ Tool failed: {truncated}")
                             else:
-                                preview = content if len(content) <= 400 else content[:400] + "…"
-                                _log(f"   ↳ Tool result: {preview}")
+                                _log("Tool completed")
 
                 elif msg_type == "ResultMessage":
                     cost_usd = getattr(msg, "cost_usd", None)
