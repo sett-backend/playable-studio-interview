@@ -18,20 +18,24 @@ class StorageService:
         self.storage = Storage(root)
         self.chat_manager = ChatManager(self.storage)
 
+    TASK_DESCRIPTION_KEY = "task_input/task_description.txt"
+
     def has_chats(self) -> bool:
         return self.storage.exists("chats.json")
 
     def initialize_chats(self, prompt: str) -> str:
         ts = _utc_ts()
-        initial_timestamp = f"0000-{ts}"
-        self.chat_manager.initialize_chats({
-            "chat_id": "0000",
-            "timestamp": initial_timestamp,
-            "role": "user",
-            "message": prompt,
-            "attachments": [],
-        })
-        return initial_timestamp
+        tmp = Path(f"/tmp/sett_chat_task_description.txt")
+        tmp.write_text(prompt, encoding="utf-8")
+        self.storage.put(self.TASK_DESCRIPTION_KEY, str(tmp))
+        tmp.unlink()
+        self.chat_manager.initialize_chats()
+        return ts
+
+    def read_task_description(self) -> str | None:
+        if not self.storage.exists(self.TASK_DESCRIPTION_KEY):
+            return None
+        return self.storage.get(self.TASK_DESCRIPTION_KEY).read_text(encoding="utf-8")
 
     def write_chat_request(self, chat_id: str, message: str) -> str:
         ts = _utc_ts()
@@ -66,7 +70,17 @@ class StorageService:
         return ts
 
     def read_chat_history(self) -> list[dict]:
-        return self.chat_manager.get_all_messages()
+        messages: list[dict] = []
+        task_description = self.read_task_description()
+        if task_description is not None:
+            messages.append({
+                "chat_id": "task_description",
+                "role": "user",
+                "message": task_description,
+                "attachments": [],
+            })
+        messages.extend(self.chat_manager.get_all_messages())
+        return messages
 
     def next_chat_id(self) -> str:
         latest = self.chat_manager.get_latest_chat_id()

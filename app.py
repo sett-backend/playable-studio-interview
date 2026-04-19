@@ -83,8 +83,22 @@ async def chat(req: ChatRequest):
 
 
 def main():
+    import argparse
+    import shutil
     import uvicorn
-    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
+
+    parser = argparse.ArgumentParser(description="Sett Chat server")
+    parser.add_argument("--clear", action="store_true", help="Wipe chat_root before starting")
+    parser.add_argument("--host", default="127.0.0.1")
+    parser.add_argument("--port", type=int, default=8000)
+    parser.add_argument("--reload", action="store_true")
+    args = parser.parse_args()
+
+    if args.clear and CHAT_ROOT.exists():
+        shutil.rmtree(CHAT_ROOT)
+        print(f"Cleared {CHAT_ROOT}")
+
+    uvicorn.run("app:app", host=args.host, port=args.port, reload=args.reload)
 
 
 if __name__ == "__main__":

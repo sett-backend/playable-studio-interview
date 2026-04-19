@@ -44,9 +44,9 @@ class ChatManager:
             print(f"Error updating chats.json: {e}")
             raise
 
-    def initialize_chats(self, initial_entry: dict) -> None:
+    def initialize_chats(self) -> None:
         try:
-            chats_data = {"version": 1, "chats": [initial_entry]}
+            chats_data = {"version": 1, "chats": []}
             temp_path = Path("/tmp/sett_chat_chats.json")
             temp_path.write_text(json.dumps(chats_data, indent=2), encoding="utf-8")
             self.storage.put(self.chats_key, str(temp_path))
