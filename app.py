@@ -1,10 +1,12 @@
 """Sett Chat — simple browser chat UI powered by agent-wrapper."""
 
+import json
 import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from agent_wrapper import Agent
@@ -78,10 +80,7 @@ async def playable():
     }
 
 
-@app.post("/chat", response_model=ChatResponse)
-async def chat(req: ChatRequest):
-    user_msg = req.message
-
+def _persist_user_message(user_msg: str) -> None:
     if not _svc.has_chats():
         _svc.initialize_chats(user_msg)
     else:
@@ -89,12 +88,58 @@ async def chat(req: ChatRequest):
         open_id = latest if latest is not None else "0001"
         _svc.write_chat_response(open_id, user_msg)
 
-    result = await _agent.run(user_msg)
-    reply = result.text
 
-    _svc.write_chat_request(_svc.next_chat_id(), reply)
+def _sse(event: str, data: dict) -> bytes:
+    payload = json.dumps(data, default=str)
+    return f"event: {event}\ndata: {payload}\n\n".encode("utf-8")
 
-    return ChatResponse(reply=reply, cost_usd=result.total_cost_usd)
+
+@app.post("/chat")
+async def chat_stream(req: ChatRequest):
+    user_msg = req.message
+    _persist_user_message(user_msg)
+
+    async def event_stream():
+        text_parts: list[str] = []
+        cost_usd: float | None = None
+
+        try:
+            await _agent._client.query(user_msg)
+            async for msg in _agent._client.receive_response():
+                msg_type = type(msg).__name__
+
+                if msg_type == "AssistantMessage":
+                    for block in getattr(msg, "content", []) or []:
+                        if hasattr(block, "text") and block.text:
+                            text_parts.append(block.text)
+                            yield _sse("text", {"content": block.text})
+                        elif hasattr(block, "name"):
+                            yield _sse(
+                                "tool_use",
+                                {
+                                    "name": block.name,
+                                    "input": getattr(block, "input", {}),
+                                },
+                            )
+
+                elif msg_type == "ToolResultMessage":
+                    content = getattr(msg, "content", "")
+                    content_str = str(content) if content is not None else ""
+                    if len(content_str) > 800:
+                        content_str = content_str[:800] + "…"
+                    yield _sse("tool_result", {"content": content_str})
+
+                elif msg_type == "ResultMessage":
+                    cost_usd = getattr(msg, "cost_usd", None)
+
+            reply = "".join(text_parts)
+            _svc.write_chat_request(_svc.next_chat_id(), reply)
+            yield _sse("done", {"cost_usd": cost_usd, "reply": reply})
+        except Exception as exc:
+            yield _sse("error", {"message": str(exc)})
+            raise
+
+    return StreamingResponse(event_stream(), media_type="text/event-stream")
 
 
 def main():
