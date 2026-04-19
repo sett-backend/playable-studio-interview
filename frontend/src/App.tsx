@@ -123,7 +123,6 @@ export default function App() {
     <div className="app-grid">
       <section className="chat-pane">
         <header>
-          <span className="header-dot" aria-hidden />
           <h1>Sett Playable Editor</h1>
         </header>
 
