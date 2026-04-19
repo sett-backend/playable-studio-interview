@@ -162,9 +162,12 @@ header h1 {
   border-radius: 12px;
   line-height: 1.5;
   font-size: 14px;
-  white-space: pre-wrap;
   word-wrap: break-word;
   max-width: 100%;
+}
+
+.msg.user {
+  white-space: pre-wrap;
 }
 
 .msg.user {
@@ -257,82 +260,6 @@ header h1 {
   font-style: italic;
 }
 
-.activity-wrapper {
-  margin-bottom: 8px;
-}
-
-.activity-summary {
-  cursor: pointer;
-  font-size: 12px;
-  color: #6b7280;
-  user-select: none;
-  padding: 2px 0;
-}
-
-.activity-summary:hover {
-  color: #374151;
-}
-
-.activity-log {
-  margin-top: 6px;
-  font-size: 12px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  color: #374151;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.activity-tool_use {
-  display: flex;
-  gap: 6px;
-  align-items: baseline;
-  margin-top: 4px;
-}
-
-.activity-tool_use:first-child {
-  margin-top: 0;
-}
-
-.activity-tool_use .activity-bullet {
-  color: #059669;
-  flex-shrink: 0;
-}
-
-.activity-tool_use .activity-name {
-  font-weight: 600;
-  color: #111827;
-}
-
-.activity-tool_use .activity-input {
-  color: #6b7280;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  min-width: 0;
-}
-
-.activity-tool_result {
-  display: flex;
-  gap: 6px;
-  padding-left: 8px;
-  color: #6b7280;
-}
-
-.activity-tool_result .activity-corner {
-  flex-shrink: 0;
-  color: #9ca3af;
-}
-
-.activity-result {
-  margin: 0;
-  font-family: inherit;
-  font-size: inherit;
-  white-space: pre-wrap;
-  word-break: break-word;
-  flex: 1;
-  min-width: 0;
-}
 
 .dot-pulse::after {
   content: '';

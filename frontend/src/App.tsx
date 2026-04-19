@@ -1,27 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import remarkBreaks from "remark-breaks";
 import { PlayablePreview } from "./PlayablePreview";
 
 type Role = "user" | "assistant";
-
-type ActivityEvent =
-  | { kind: "tool_use"; name: string; input: unknown }
-  | { kind: "tool_result"; content: string };
 
 interface Message {
   role: Role;
   text: string;
   cost?: number | null;
-  activity?: ActivityEvent[];
 }
 
 interface HistoryEntry {
   chat_id: string;
   role: "user" | "agent";
   message: string;
-  activity?: ActivityEvent[];
 }
 
 export default function App() {
@@ -41,7 +34,6 @@ export default function App() {
           (data.messages || []).map((m) => ({
             role: m.role === "agent" ? "assistant" : "user",
             text: m.message,
-            activity: m.activity,
           })),
         );
       } catch (e) {
@@ -73,7 +65,7 @@ export default function App() {
     setMessages((prev) => [
       ...prev,
       { role: "user", text },
-      { role: "assistant", text: "", activity: [] },
+      { role: "assistant", text: "" },
     ]);
 
     const updateLast = (mut: (m: Message) => Message) => {
@@ -181,16 +173,6 @@ function handleSse(block: string, updateLast: (m: (msg: Message) => Message) => 
 
   if (event === "text") {
     updateLast((m) => ({ ...m, text: (m.text || "") + (data.content || "") }));
-  } else if (event === "tool_use") {
-    updateLast((m) => ({
-      ...m,
-      activity: [...(m.activity || []), { kind: "tool_use", name: data.name, input: data.input }],
-    }));
-  } else if (event === "tool_result") {
-    updateLast((m) => ({
-      ...m,
-      activity: [...(m.activity || []), { kind: "tool_result", content: data.content }],
-    }));
   } else if (event === "done") {
     updateLast((m) => ({
       ...m,
@@ -203,65 +185,24 @@ function handleSse(block: string, updateLast: (m: (msg: Message) => Message) => 
 }
 
 function MessageBubble({ message: m, streaming }: { message: Message; streaming: boolean }) {
-  const hasActivity = m.activity && m.activity.length > 0;
-
   return (
     <div className={`msg-row ${m.role}`}>
-      {m.role === "assistant" && hasActivity && (
-        <details className="activity-wrapper" open={streaming}>
-          <summary className="activity-summary">Logs</summary>
-          <div className="activity-log">
-            {m.activity!.map((a, i) => (
-              <div key={i} className={`activity-${a.kind}`}>
-                {a.kind === "tool_use" ? (
-                  <>
-                    <span className="activity-bullet">●</span>
-                    <span className="activity-name">{a.name}</span>
-                    <span className="activity-input">({summarizeInput(a.input)})</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="activity-corner">⎿</span>
-                    <pre className="activity-result">{a.content}</pre>
-                  </>
-                )}
-              </div>
-            ))}
-          </div>
-        </details>
-      )}
-      {(m.text || streaming) && (
-        <div className={`msg ${m.role}`}>
-          {m.text ? (
-            m.role === "assistant" ? (
-              <div className="markdown">
-                <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>{m.text}</ReactMarkdown>
-              </div>
-            ) : (
-              m.text
-            )
+      <div className={`msg ${m.role}`}>
+        {m.text ? (
+          m.role === "assistant" ? (
+            <div className="markdown">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
+            </div>
           ) : (
-            <span className="thinking-placeholder">
-              Thinking<span className="dot-pulse"></span>
-            </span>
-          )}
-        </div>
-      )}
+            m.text
+          )
+        ) : streaming ? (
+          <span className="thinking-placeholder">
+            Thinking<span className="dot-pulse"></span>
+          </span>
+        ) : null}
+      </div>
       {m.cost != null && <div className="cost">${m.cost.toFixed(4)}</div>}
     </div>
   );
-}
-
-function summarizeInput(input: unknown): string {
-  if (!input || typeof input !== "object") return "";
-  const obj = input as Record<string, unknown>;
-  const keys = ["file_path", "path", "pattern", "command", "url"];
-  for (const k of keys) {
-    const v = obj[k];
-    if (typeof v === "string") return v.length > 80 ? v.slice(0, 80) + "…" : v;
-  }
-  const first = Object.entries(obj)[0];
-  if (!first) return "";
-  const v = String(first[1]);
-  return v.length > 80 ? v.slice(0, 80) + "…" : v;
 }
