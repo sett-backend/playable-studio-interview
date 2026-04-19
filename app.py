@@ -94,6 +94,10 @@ def _sse(event: str, data: dict) -> bytes:
     return f"event: {event}\ndata: {payload}\n\n".encode("utf-8")
 
 
+def _log(line: str) -> None:
+    print(line, flush=True)
+
+
 @app.post("/chat")
 async def chat_stream(req: ChatRequest):
     user_msg = req.message
@@ -103,6 +107,8 @@ async def chat_stream(req: ChatRequest):
         text_parts: list[str] = []
         cost_usd: float | None = None
 
+        _log(f"━━━ User: {user_msg!r}")
+
         try:
             await _agent._client.query(user_msg)
             async for msg in _agent._client.receive_response():
@@ -110,16 +116,41 @@ async def chat_stream(req: ChatRequest):
 
                 if msg_type == "AssistantMessage":
                     for block in getattr(msg, "content", []) or []:
-                        if hasattr(block, "text") and block.text:
+                        block_type = type(block).__name__
+                        if block_type == "ThinkingBlock":
+                            thinking = getattr(block, "thinking", "")
+                            if thinking:
+                                _log(f"<Thinking>\n{thinking}\n</Thinking>")
+                        elif hasattr(block, "text") and block.text:
                             text_parts.append(block.text)
+                            _log(f"🤖 Assistant: {block.text}")
+                        elif hasattr(block, "name"):
+                            tool_name = block.name
+                            tool_input = getattr(block, "input", {}) or {}
+                            _log(f"🔧 Tool use: {tool_name}")
+                            if tool_input:
+                                _log(f"   Parameters: {json.dumps(tool_input, indent=2, default=str)}")
+
+                elif msg_type == "UserMessage":
+                    for block in getattr(msg, "content", []) or []:
+                        if hasattr(block, "tool_use_id"):
+                            is_error = getattr(block, "is_error", False)
+                            content = str(getattr(block, "content", "") or "")
+                            if is_error:
+                                _log(f"❌ Tool failed: {content[:400]}")
+                            else:
+                                preview = content if len(content) <= 400 else content[:400] + "…"
+                                _log(f"   ↳ Tool result: {preview}")
 
                 elif msg_type == "ResultMessage":
                     cost_usd = getattr(msg, "cost_usd", None)
+                    _log(f"━━━ Done (cost_usd={cost_usd})")
 
             reply = "".join(text_parts)
             _svc.write_chat_request(_svc.next_chat_id(), reply)
             yield _sse("done", {"cost_usd": cost_usd, "reply": reply})
         except Exception as exc:
+            _log(f"💥 Stream error: {exc!r}")
             yield _sse("error", {"message": str(exc)})
             raise
 
