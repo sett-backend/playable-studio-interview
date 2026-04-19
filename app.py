@@ -4,8 +4,6 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from agent_wrapper import Agent
@@ -36,7 +34,6 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-app.mount("/static", StaticFiles(directory=Path(__file__).parent / "static"), name="static")
 
 # ---------------------------------------------------------------------------
 # Routes
@@ -50,12 +47,6 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     reply: str
     cost_usd: float | None = None
-
-
-@app.get("/", response_class=HTMLResponse)
-async def index():
-    html = (Path(__file__).parent / "static" / "index.html").read_text()
-    return HTMLResponse(content=html)
 
 
 @app.get("/history")
