@@ -88,6 +88,12 @@ body {
   min-width: 0;
 }
 
+.preview-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .preview-title h2 {
   font-family: "Bebas Neue", "Oswald", Impact, sans-serif;
   font-size: 18px;

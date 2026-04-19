@@ -42,7 +42,10 @@ export function PlayablePreview() {
     <div className="preview-root">
       <div className="preview-toolbar">
         <div className="preview-title">
-          <h2>Modified Playable</h2>
+          <div className="preview-title-row">
+            <span className="header-dot" aria-hidden />
+            <h2>Modified Playable</h2>
+          </div>
           <span className="preview-url">Running on {info.url}</span>
         </div>
         <button
