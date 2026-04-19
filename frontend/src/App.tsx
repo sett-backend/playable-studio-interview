@@ -123,8 +123,7 @@ export default function App() {
     <div className="app-grid">
       <section className="chat-pane">
         <header>
-          <span className="brand-logo">sett</span>
-          <span className="brand-badge">Playable Editor</span>
+          <h1>Sett Playable Editor</h1>
         </header>
 
         <div id="messages" ref={scrollRef}>

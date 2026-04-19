@@ -166,7 +166,7 @@ body {
 header {
   height: 56px;
   padding: 0 24px;
-  border-bottom: 2px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -174,27 +174,13 @@ header {
   background: #ffffff;
 }
 
-.brand-logo {
-  font-family: "Archivo Black", "Inter", system-ui, sans-serif;
-  font-weight: 900;
-  font-size: 28px;
-  letter-spacing: -0.02em;
-  text-transform: lowercase;
-  color: var(--ink);
-  line-height: 1;
-}
-
-.brand-badge {
-  font-size: 11px;
+header h1 {
+  font-family: "Bebas Neue", "Oswald", Impact, sans-serif;
+  font-size: 26px;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink);
-  background: var(--pastel-pink);
-  border: 1px solid var(--ink);
-  border-radius: 999px;
-  padding: 4px 10px;
-  box-shadow: 2px 2px 0 var(--ink);
 }
 
 #messages {
