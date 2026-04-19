@@ -180,6 +180,56 @@ header {
   background: #ffffff;
 }
 
+.brand-highlight {
+  background-image: linear-gradient(var(--pastel-pink), var(--pastel-pink));
+  background-repeat: no-repeat;
+  background-position: 0 85%;
+  background-size: 100% 38%;
+  padding: 0 2px;
+}
+
+.header-flag {
+  display: inline-flex;
+  gap: 3px;
+  border: 1px solid var(--ink);
+  padding: 3px;
+  box-shadow: 2px 2px 0 var(--ink);
+  background: #fff;
+}
+.header-flag > span {
+  width: 6px;
+  height: 14px;
+  display: block;
+}
+.header-flag > span:nth-child(1) { background: var(--pastel-pink); }
+.header-flag > span:nth-child(2) { background: var(--soft-orange); }
+.header-flag > span:nth-child(3) { background: var(--pastel-blue); }
+
+.header-beta {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  background: var(--pastel-pink);
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  padding: 3px 8px;
+  box-shadow: 2px 2px 0 var(--ink);
+  margin-left: auto;
+}
+
+.header-kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--ink);
+  border-radius: 6px;
+  padding: 3px 8px;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
 .header-dot {
   width: 16px;
   height: 16px;
