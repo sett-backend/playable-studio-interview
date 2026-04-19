@@ -124,7 +124,6 @@ export default function App() {
       <section className="chat-pane">
         <header>
           <h1>Sett Playable Editor</h1>
-          <span className="header-beta">BETA</span>
         </header>
 
         <div id="messages" ref={scrollRef}>

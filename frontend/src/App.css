@@ -172,28 +172,12 @@ body {
 header {
   height: 56px;
   padding: 0 24px;
-  border-bottom: 3px solid var(--ink);
-  box-shadow: 0 3px 0 var(--ink);
+  border-bottom: 1px solid var(--ink);
   display: flex;
   align-items: center;
   gap: 12px;
   box-sizing: border-box;
-  background: var(--pastel-pink);
-  position: relative;
-  z-index: 1;
-}
-
-.header-beta {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--ink);
   background: #ffffff;
-  border: 1px solid var(--ink);
-  border-radius: 999px;
-  padding: 3px 8px;
-  box-shadow: 2px 2px 0 var(--ink);
-  margin-left: auto;
 }
 
 .header-dot {
