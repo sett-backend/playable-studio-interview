@@ -1,5 +1,6 @@
 """Sett Chat — simple browser chat UI powered by agent-wrapper."""
 
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -17,6 +18,21 @@ _agent: Agent | None = None
 _svc: StorageService | None = None
 
 CHAT_ROOT = Path(__file__).parent / "chat_root"
+ENV_PATH = Path(__file__).parent / ".env"
+
+
+def _load_env(path: Path) -> None:
+    if not path.exists():
+        return
+    for line in path.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        os.environ.setdefault(key.strip(), value.strip())
+
+
+_load_env(ENV_PATH)
 
 
 @asynccontextmanager
@@ -52,6 +68,14 @@ class ChatResponse(BaseModel):
 @app.get("/history")
 async def history():
     return {"messages": _svc.read_chat_history()}
+
+
+@app.get("/playable")
+async def playable():
+    return {
+        "url": os.environ.get("PLAYABLE_URL"),
+        "aspect": os.environ.get("PLAYABLE_ASPECT", "9:16"),
+    }
 
 
 @app.post("/chat", response_model=ChatResponse)

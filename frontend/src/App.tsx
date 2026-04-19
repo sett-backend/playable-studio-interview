@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { PlayablePreview } from "./PlayablePreview";
 
 type Role = "user" | "assistant";
 
@@ -89,42 +90,48 @@ export default function App() {
   };
 
   return (
-    <>
-      <header>
-        <h1>Sett Chat</h1>
-      </header>
+    <div className="app-grid">
+      <section className="chat-pane">
+        <header>
+          <h1>Sett Chat</h1>
+        </header>
 
-      <div id="messages" ref={scrollRef}>
-        {messages.map((m, i) => (
-          <div key={i} className={`msg ${m.role}`}>
-            {m.text}
-            {m.cost != null && <div className="cost">${m.cost.toFixed(4)}</div>}
-          </div>
-        ))}
-        {thinking && (
-          <div className="msg thinking">
-            Thinking<span className="dot-pulse"></span>
-          </div>
-        )}
-      </div>
+        <div id="messages" ref={scrollRef}>
+          {messages.map((m, i) => (
+            <div key={i} className={`msg ${m.role}`}>
+              {m.text}
+              {m.cost != null && <div className="cost">${m.cost.toFixed(4)}</div>}
+            </div>
+          ))}
+          {thinking && (
+            <div className="msg thinking">
+              Thinking<span className="dot-pulse"></span>
+            </div>
+          )}
+        </div>
 
-      <div id="input-area">
-        <textarea
-          ref={inputRef}
-          rows={1}
-          placeholder="Send a message..."
-          autoFocus
-          value={input}
-          onChange={(e) => {
-            setInput(e.target.value);
-            autoResize();
-          }}
-          onKeyDown={onKeyDown}
-        />
-        <button onClick={send} disabled={sending}>
-          Send
-        </button>
-      </div>
-    </>
+        <div id="input-area">
+          <textarea
+            ref={inputRef}
+            rows={1}
+            placeholder="Send a message..."
+            autoFocus
+            value={input}
+            onChange={(e) => {
+              setInput(e.target.value);
+              autoResize();
+            }}
+            onKeyDown={onKeyDown}
+          />
+          <button onClick={send} disabled={sending}>
+            Send
+          </button>
+        </div>
+      </section>
+
+      <section className="preview-pane">
+        <PlayablePreview />
+      </section>
+    </div>
   );
 }
