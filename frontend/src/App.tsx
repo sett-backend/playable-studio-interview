@@ -52,7 +52,10 @@ export default function App() {
     const el = inputRef.current;
     if (!el) return;
     el.style.height = "auto";
-    el.style.height = Math.min(el.scrollHeight, 160) + "px";
+    const max = 180;
+    const next = Math.min(el.scrollHeight, max);
+    el.style.height = next + "px";
+    el.classList.toggle("overflowing", el.scrollHeight > max);
   };
 
   const send = async () => {
@@ -185,7 +188,7 @@ function handleSse(block: string, updateLast: (m: (msg: Message) => Message) => 
 function MessageBubble({ message: m, streaming }: { message: Message; streaming: boolean }) {
   return (
     <div className={`msg-row ${m.role}`}>
-      <div className="msg-label">{m.role === "user" ? "You" : "Sett AI"}</div>
+      <div className="msg-label">{m.role === "user" ? "Auditor" : "Developer Agent"}</div>
       <div className={`msg ${m.role}`}>
         {m.text ? (
           m.role === "assistant" ? (

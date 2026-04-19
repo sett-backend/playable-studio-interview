@@ -159,7 +159,7 @@ header {
   align-items: center;
   gap: 12px;
   box-sizing: border-box;
-  background: var(--cream);
+  background: #ffffff;
 }
 
 header h1 {
@@ -212,6 +212,7 @@ header h1 {
   padding: 16px 24px;
   border-radius: 24px;
   border: 1px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
   line-height: 1.6;
   font-size: 14px;
   word-wrap: break-word;
@@ -330,23 +331,38 @@ header h1 {
   display: flex;
   gap: 12px;
   align-items: flex-end;
-  background: var(--cream);
+  background: #ffffff;
+  box-sizing: border-box;
 }
 
 #input-area textarea {
   flex: 1;
   background: #ffffff;
   border: 1px solid var(--ink);
-  border-radius: 9999px;
+  border-radius: 24px;
   padding: 16px 24px;
   color: var(--ink);
   font-family: inherit;
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 1.5;
   resize: none;
   outline: none;
   min-height: 52px;
   max-height: 180px;
+  overflow-y: hidden;
+  box-sizing: border-box;
+  display: block;
+}
+
+#input-area textarea.overflowing {
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+#input-area textarea.overflowing::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 #input-area textarea:focus {
@@ -363,14 +379,20 @@ header h1 {
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  transition: filter 0.15s;
+  transition: transform 0.08s, box-shadow 0.08s, filter 0.15s;
   flex-shrink: 0;
+  box-shadow: 3px 3px 0 var(--ink);
 }
 
-#input-area button:hover { filter: brightness(0.96); }
+#input-area button:hover { filter: brightness(0.97); }
+#input-area button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
 #input-area button:disabled {
   background: #ffffff;
   color: var(--ink);
   opacity: 0.5;
   cursor: not-allowed;
+  box-shadow: 3px 3px 0 var(--ink);
 }
