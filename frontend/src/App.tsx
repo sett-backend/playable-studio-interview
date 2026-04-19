@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 import { PlayablePreview } from "./PlayablePreview";
 
 type Role = "user" | "assistant";
@@ -203,14 +204,14 @@ function handleSse(block: string, updateLast: (m: (msg: Message) => Message) => 
 
 function MessageBubble({ message: m, streaming }: { message: Message; streaming: boolean }) {
   const hasActivity = m.activity && m.activity.length > 0;
+  const toolCount = hasActivity ? m.activity!.filter((a) => a.kind === "tool_use").length : 0;
 
   return (
-    <div className={`msg ${m.role}`}>
+    <div className={`msg-row ${m.role}`}>
       {m.role === "assistant" && hasActivity && (
         <details className="activity-wrapper" open={streaming}>
           <summary className="activity-summary">
-            {m.activity!.filter((a) => a.kind === "tool_use").length} tool call
-            {m.activity!.filter((a) => a.kind === "tool_use").length === 1 ? "" : "s"}
+            {toolCount} tool call{toolCount === 1 ? "" : "s"}
           </summary>
           <div className="activity-log">
             {m.activity!.map((a, i) => (
@@ -232,19 +233,23 @@ function MessageBubble({ message: m, streaming }: { message: Message; streaming:
           </div>
         </details>
       )}
-      {m.text ? (
-        m.role === "assistant" ? (
-          <div className="markdown">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
-          </div>
-        ) : (
-          m.text
-        )
-      ) : streaming ? (
-        <span className="thinking-placeholder">
-          Thinking<span className="dot-pulse"></span>
-        </span>
-      ) : null}
+      {(m.text || streaming) && (
+        <div className={`msg ${m.role}`}>
+          {m.text ? (
+            m.role === "assistant" ? (
+              <div className="markdown">
+                <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>{m.text}</ReactMarkdown>
+              </div>
+            ) : (
+              m.text
+            )
+          ) : (
+            <span className="thinking-placeholder">
+              Thinking<span className="dot-pulse"></span>
+            </span>
+          )}
+        </div>
+      )}
       {m.cost != null && <div className="cost">${m.cost.toFixed(4)}</div>}
     </div>
   );
