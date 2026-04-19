@@ -25,10 +25,7 @@ class StorageService:
 
     def initialize_chats(self, prompt: str) -> str:
         ts = _utc_ts()
-        tmp = Path(f"/tmp/sett_chat_task_description.txt")
-        tmp.write_text(prompt, encoding="utf-8")
-        self.storage.put(self.TASK_DESCRIPTION_KEY, str(tmp))
-        tmp.unlink()
+        self.storage.put_text(self.TASK_DESCRIPTION_KEY, prompt)
         self.chat_manager.initialize_chats()
         return ts
 
@@ -40,10 +37,7 @@ class StorageService:
     def write_chat_request(self, chat_id: str, message: str) -> str:
         ts = _utc_ts()
         key = f"chat/{chat_id}/request-{ts}/message.txt"
-        tmp = Path(f"/tmp/sett_chat_{chat_id}_req.txt")
-        tmp.write_text(message, encoding="utf-8")
-        self.storage.put(key, str(tmp))
-        tmp.unlink()
+        self.storage.put_text(key, message)
         self.chat_manager.update_chats({
             "chat_id": chat_id,
             "timestamp": ts,
@@ -56,10 +50,7 @@ class StorageService:
     def write_chat_response(self, chat_id: str, message: str) -> str:
         ts = _utc_ts()
         key = f"chat/{chat_id}/response-{ts}/message.txt"
-        tmp = Path(f"/tmp/sett_chat_{chat_id}_resp.txt")
-        tmp.write_text(message, encoding="utf-8")
-        self.storage.put(key, str(tmp))
-        tmp.unlink()
+        self.storage.put_text(key, message)
         self.chat_manager.update_chats({
             "chat_id": chat_id,
             "timestamp": ts,

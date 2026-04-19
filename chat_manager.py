@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 from typing import Optional
 
 from storage import Storage
@@ -31,10 +30,7 @@ class ChatManager:
             chats_data = self.read_chats()
             chats_data["chats"].append(chat_entry)
 
-            temp_path = Path("/tmp/sett_chat_chats.json")
-            temp_path.write_text(json.dumps(chats_data, indent=2), encoding="utf-8")
-            self.storage.put(self.chats_key, str(temp_path))
-            temp_path.unlink()
+            self.storage.put_text(self.chats_key, json.dumps(chats_data, indent=2))
 
             print(
                 f"Updated chats.json: chat_id={chat_entry.get('chat_id')}, "
@@ -47,10 +43,7 @@ class ChatManager:
     def initialize_chats(self) -> None:
         try:
             chats_data = {"version": 1, "chats": []}
-            temp_path = Path("/tmp/sett_chat_chats.json")
-            temp_path.write_text(json.dumps(chats_data, indent=2), encoding="utf-8")
-            self.storage.put(self.chats_key, str(temp_path))
-            temp_path.unlink()
+            self.storage.put_text(self.chats_key, json.dumps(chats_data, indent=2))
             print("Initialized chats.json")
         except Exception as e:
             print(f"Error initializing chats.json: {e}")

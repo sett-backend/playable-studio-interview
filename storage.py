@@ -25,6 +25,11 @@ class Storage:
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(src_path, dest)
 
+    def put_text(self, key: str, content: str) -> None:
+        dest = self._path(key)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(content, encoding="utf-8")
+
     def list(self, prefix: str) -> list[str]:
         base = self._path(prefix)
         if not base.exists():
