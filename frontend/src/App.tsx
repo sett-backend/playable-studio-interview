@@ -18,6 +18,7 @@ interface HistoryEntry {
   chat_id: string;
   role: "user" | "agent";
   message: string;
+  activity?: ActivityEvent[];
 }
 
 export default function App() {
@@ -37,6 +38,7 @@ export default function App() {
           (data.messages || []).map((m) => ({
             role: m.role === "agent" ? "assistant" : "user",
             text: m.message,
+            activity: m.activity,
           })),
         );
       } catch (e) {
@@ -203,24 +205,30 @@ function MessageBubble({ message: m, streaming }: { message: Message; streaming:
   return (
     <div className={`msg ${m.role}`}>
       {m.role === "assistant" && hasActivity && (
-        <div className="activity-log">
-          {m.activity!.map((a, i) => (
-            <div key={i} className={`activity-${a.kind}`}>
-              {a.kind === "tool_use" ? (
-                <>
-                  <span className="activity-bullet">●</span>
-                  <span className="activity-name">{a.name}</span>
-                  <span className="activity-input">({summarizeInput(a.input)})</span>
-                </>
-              ) : (
-                <>
-                  <span className="activity-corner">⎿</span>
-                  <pre className="activity-result">{a.content}</pre>
-                </>
-              )}
-            </div>
-          ))}
-        </div>
+        <details className="activity-wrapper" open={streaming}>
+          <summary className="activity-summary">
+            {m.activity!.filter((a) => a.kind === "tool_use").length} tool call
+            {m.activity!.filter((a) => a.kind === "tool_use").length === 1 ? "" : "s"}
+          </summary>
+          <div className="activity-log">
+            {m.activity!.map((a, i) => (
+              <div key={i} className={`activity-${a.kind}`}>
+                {a.kind === "tool_use" ? (
+                  <>
+                    <span className="activity-bullet">●</span>
+                    <span className="activity-name">{a.name}</span>
+                    <span className="activity-input">({summarizeInput(a.input)})</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="activity-corner">⎿</span>
+                    <pre className="activity-result">{a.content}</pre>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        </details>
       )}
       {m.text ? (
         m.text

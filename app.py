@@ -101,6 +101,7 @@ async def chat_stream(req: ChatRequest):
 
     async def event_stream():
         text_parts: list[str] = []
+        activity: list[dict] = []
         cost_usd: float | None = None
 
         try:
@@ -114,26 +115,27 @@ async def chat_stream(req: ChatRequest):
                             text_parts.append(block.text)
                             yield _sse("text", {"content": block.text})
                         elif hasattr(block, "name"):
-                            yield _sse(
-                                "tool_use",
-                                {
-                                    "name": block.name,
-                                    "input": getattr(block, "input", {}),
-                                },
-                            )
+                            event = {
+                                "kind": "tool_use",
+                                "name": block.name,
+                                "input": getattr(block, "input", {}),
+                            }
+                            activity.append(event)
+                            yield _sse("tool_use", {"name": event["name"], "input": event["input"]})
 
                 elif msg_type == "ToolResultMessage":
                     content = getattr(msg, "content", "")
                     content_str = str(content) if content is not None else ""
                     if len(content_str) > 800:
                         content_str = content_str[:800] + "…"
+                    activity.append({"kind": "tool_result", "content": content_str})
                     yield _sse("tool_result", {"content": content_str})
 
                 elif msg_type == "ResultMessage":
                     cost_usd = getattr(msg, "cost_usd", None)
 
             reply = "".join(text_parts)
-            _svc.write_chat_request(_svc.next_chat_id(), reply)
+            _svc.write_chat_request(_svc.next_chat_id(), reply, activity=activity)
             yield _sse("done", {"cost_usd": cost_usd, "reply": reply})
         except Exception as exc:
             yield _sse("error", {"message": str(exc)})

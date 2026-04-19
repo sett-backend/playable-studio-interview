@@ -176,8 +176,24 @@ header h1 {
   font-style: italic;
 }
 
-.activity-log {
+.activity-wrapper {
   margin-bottom: 8px;
+}
+
+.activity-summary {
+  cursor: pointer;
+  font-size: 12px;
+  color: #6b7280;
+  user-select: none;
+  padding: 2px 0;
+}
+
+.activity-summary:hover {
+  color: #374151;
+}
+
+.activity-log {
+  margin-top: 6px;
   font-size: 12px;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   color: #374151;

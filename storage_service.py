@@ -32,7 +32,12 @@ class StorageService:
         })
         return ts
 
-    def write_chat_request(self, chat_id: str, message: str) -> str:
+    def write_chat_request(
+        self,
+        chat_id: str,
+        message: str,
+        activity: list[dict] | None = None,
+    ) -> str:
         ts = _utc_ts()
         key = f"chat/{chat_id}/request-{ts}/message.txt"
         self.storage.put_text(key, message)
@@ -42,6 +47,7 @@ class StorageService:
             "role": "agent",
             "message": message,
             "attachments": [],
+            "activity": activity or [],
         })
         return ts
 
