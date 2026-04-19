@@ -35,22 +35,6 @@ def _load_env(path: Path) -> None:
 _load_env(ENV_PATH)
 
 
-async def _run_initial_task_if_needed() -> None:
-    if os.environ.get("SETT_SKIP_AUTO_TASK") == "1":
-        return
-    task = os.environ.get("MODIFICATION_TASK", "").strip()
-    if not task:
-        return
-    if _svc.has_chats():
-        return
-
-    print(f"[auto-task] seeding conversation with MODIFICATION_TASK ({len(task)} chars)")
-    _svc.initialize_chats(task)
-    result = await _agent.run(task)
-    _svc.write_chat_request(_svc.next_chat_id(), result.text)
-    print("[auto-task] agent reply written")
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global _agent, _svc
@@ -61,7 +45,6 @@ async def lifespan(app: FastAPI):
         permission_mode="bypassPermissions",
     )
     await _agent.connect()
-    await _run_initial_task_if_needed()
     yield
     await _agent.disconnect()
 
@@ -129,9 +112,6 @@ def main():
     if args.clear and CHAT_ROOT.exists():
         shutil.rmtree(CHAT_ROOT)
         print(f"Cleared {CHAT_ROOT}")
-
-    if args.reload:
-        os.environ["SETT_SKIP_AUTO_TASK"] = "1"
 
     uvicorn.run("app:app", host=args.host, port=args.port, reload=args.reload)
 
