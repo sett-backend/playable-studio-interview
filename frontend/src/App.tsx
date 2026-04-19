@@ -204,15 +204,12 @@ function handleSse(block: string, updateLast: (m: (msg: Message) => Message) => 
 
 function MessageBubble({ message: m, streaming }: { message: Message; streaming: boolean }) {
   const hasActivity = m.activity && m.activity.length > 0;
-  const toolCount = hasActivity ? m.activity!.filter((a) => a.kind === "tool_use").length : 0;
 
   return (
     <div className={`msg-row ${m.role}`}>
       {m.role === "assistant" && hasActivity && (
         <details className="activity-wrapper" open={streaming}>
-          <summary className="activity-summary">
-            {toolCount} tool call{toolCount === 1 ? "" : "s"}
-          </summary>
+          <summary className="activity-summary">Logs</summary>
           <div className="activity-log">
             {m.activity!.map((a, i) => (
               <div key={i} className={`activity-${a.kind}`}>
