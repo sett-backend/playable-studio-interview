@@ -159,6 +159,7 @@ header h1 {
 
 .msg.assistant {
   align-self: flex-start;
+  width: 100%;
   background: #f4f4f5;
   border: 1px solid #e5e5e5;
   color: #1a1a1a;
@@ -333,6 +334,7 @@ header h1 {
   border-top: 1px solid #e5e5e5;
   display: flex;
   gap: 12px;
+  align-items: flex-end;
 }
 
 #input-area textarea {
@@ -360,10 +362,12 @@ header h1 {
   border: none;
   border-radius: 10px;
   padding: 0 20px;
+  height: 44px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.15s;
+  flex-shrink: 0;
 }
 
 #input-area button:hover { background: #2563eb; }
