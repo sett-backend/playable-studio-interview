@@ -132,6 +132,7 @@ async def chat_stream(req: ChatRequest):
                             if thinking:
                                 _log(f"<Thinking>\n{thinking}\n</Thinking>")
                         elif hasattr(block, "text") and block.text:
+                            text_parts.clear()
                             text_parts.append(block.text)
                             _log(f"🤖 Assistant: {block.text}")
                         elif hasattr(block, "name"):
