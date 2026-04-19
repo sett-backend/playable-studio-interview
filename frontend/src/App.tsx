@@ -171,9 +171,7 @@ function handleSse(block: string, updateLast: (m: (msg: Message) => Message) => 
     return;
   }
 
-  if (event === "text") {
-    updateLast((m) => ({ ...m, text: (m.text || "") + (data.content || "") }));
-  } else if (event === "done") {
+  if (event === "done") {
     updateLast((m) => ({
       ...m,
       cost: data.cost_usd,

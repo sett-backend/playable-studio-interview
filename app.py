@@ -112,7 +112,6 @@ async def chat_stream(req: ChatRequest):
                     for block in getattr(msg, "content", []) or []:
                         if hasattr(block, "text") and block.text:
                             text_parts.append(block.text)
-                            yield _sse("text", {"content": block.text})
 
                 elif msg_type == "ResultMessage":
                     cost_usd = getattr(msg, "cost_usd", None)
