@@ -139,7 +139,15 @@ async def chat_stream(req: ChatRequest):
             yield _sse("error", {"message": str(exc)})
             raise
 
-    return StreamingResponse(event_stream(), media_type="text/event-stream")
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
 
 
 def main():
