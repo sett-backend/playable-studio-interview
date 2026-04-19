@@ -179,38 +179,32 @@ header h1 {
 .activity-log {
   margin-bottom: 8px;
   font-size: 12px;
-  background: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-  padding: 6px 10px;
-}
-
-.activity-log summary {
-  cursor: pointer;
-  color: #6b7280;
-  user-select: none;
-}
-
-.activity-list {
-  margin-top: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: #374151;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  color: #374151;
-  max-height: 240px;
-  overflow-y: auto;
 }
 
 .activity-tool_use {
   display: flex;
   gap: 6px;
   align-items: baseline;
+  margin-top: 4px;
+}
+
+.activity-tool_use:first-child {
+  margin-top: 0;
+}
+
+.activity-tool_use .activity-bullet {
+  color: #059669;
+  flex-shrink: 0;
 }
 
 .activity-tool_use .activity-name {
   font-weight: 600;
-  color: #1d4ed8;
+  color: #111827;
 }
 
 .activity-tool_use .activity-input {
@@ -218,21 +212,29 @@ header h1 {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
 }
 
 .activity-tool_result {
   display: flex;
   gap: 6px;
-  padding-left: 14px;
+  padding-left: 8px;
   color: #6b7280;
-  white-space: pre-wrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-height: 4.5em;
 }
 
-.activity-icon {
+.activity-tool_result .activity-corner {
   flex-shrink: 0;
+  color: #9ca3af;
+}
+
+.activity-result {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
+  flex: 1;
+  min-width: 0;
 }
 
 .dot-pulse::after {

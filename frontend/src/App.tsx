@@ -203,27 +203,24 @@ function MessageBubble({ message: m, streaming }: { message: Message; streaming:
   return (
     <div className={`msg ${m.role}`}>
       {m.role === "assistant" && hasActivity && (
-        <details className="activity-log" open={streaming && !m.text}>
-          <summary>{m.activity!.length} activity event{m.activity!.length === 1 ? "" : "s"}</summary>
-          <div className="activity-list">
-            {m.activity!.map((a, i) => (
-              <div key={i} className={`activity-${a.kind}`}>
-                {a.kind === "tool_use" ? (
-                  <>
-                    <span className="activity-icon">🔧</span>
-                    <span className="activity-name">{a.name}</span>
-                    <span className="activity-input">{summarizeInput(a.input)}</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="activity-icon">↳</span>
-                    <span className="activity-result">{a.content}</span>
-                  </>
-                )}
-              </div>
-            ))}
-          </div>
-        </details>
+        <div className="activity-log">
+          {m.activity!.map((a, i) => (
+            <div key={i} className={`activity-${a.kind}`}>
+              {a.kind === "tool_use" ? (
+                <>
+                  <span className="activity-bullet">●</span>
+                  <span className="activity-name">{a.name}</span>
+                  <span className="activity-input">({summarizeInput(a.input)})</span>
+                </>
+              ) : (
+                <>
+                  <span className="activity-corner">⎿</span>
+                  <pre className="activity-result">{a.content}</pre>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
       )}
       {m.text ? (
         m.text
