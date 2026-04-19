@@ -106,6 +106,16 @@ async def chat_stream(req: ChatRequest):
     async def event_stream():
         text_parts: list[str] = []
         cost_usd: float | None = None
+        persisted = False
+
+        def _persist_reply() -> None:
+            nonlocal persisted
+            if persisted:
+                return
+            reply = "".join(text_parts)
+            if reply:
+                _svc.write_chat_request(_svc.next_chat_id(), reply)
+            persisted = True
 
         _log(f"━━━ User: {user_msg!r}")
 
