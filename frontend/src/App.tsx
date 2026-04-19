@@ -200,7 +200,12 @@ function MessageBubble({ message: m, streaming }: { message: Message; streaming:
           )
         ) : streaming ? (
           <span className="thinking-placeholder">
-            Thinking<span className="dot-pulse"></span>
+            Thinking
+            <span className="dot-pulse">
+              <span>.</span>
+              <span>.</span>
+              <span>.</span>
+            </span>
           </span>
         ) : null}
       </div>
