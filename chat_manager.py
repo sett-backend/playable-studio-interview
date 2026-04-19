@@ -40,9 +40,10 @@ class ChatManager:
             print(f"Error updating chats.json: {e}")
             raise
 
-    def initialize_chats(self) -> None:
+    def initialize_chats(self, initial_entry: Optional[dict] = None) -> None:
         try:
-            chats_data = {"version": 1, "chats": []}
+            chats: list[dict] = [initial_entry] if initial_entry is not None else []
+            chats_data = {"version": 1, "chats": chats}
             self.storage.put_text(self.chats_key, json.dumps(chats_data, indent=2))
             print("Initialized chats.json")
         except Exception as e:
