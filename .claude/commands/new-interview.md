@@ -51,6 +51,7 @@ tell application "Terminal"
   activate
   do script "playable"
   delay 0.5
+  set custom title of selected tab of front window to "playable"
   tell application "System Events"
     tell process "Terminal"
       keystroke "t" using command down
@@ -58,7 +59,7 @@ tell application "Terminal"
   end tell
   delay 0.5
   do script "backend" in selected tab of front window
-  delay 0.5
+  set custom title of selected tab of front window to "backend"
   tell application "System Events"
     tell process "Terminal"
       keystroke "t" using command down
@@ -66,6 +67,7 @@ tell application "Terminal"
   end tell
   delay 0.5
   do script "frontend" in selected tab of front window
+  set custom title of selected tab of front window to "frontend"
 end tell
 EOF
 ```
