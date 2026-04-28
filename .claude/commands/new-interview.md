@@ -1,4 +1,4 @@
-Set up a fresh interview session. Do all five steps in order.
+Set up a fresh interview session. Do all six steps in order.
 
 ## Step 0 — Kill any running servers
 
@@ -41,16 +41,37 @@ Open the `playable-studio-interview` repo in PyCharm:
 open -a "PyCharm" /Users/sett/interview/playable-studio-interview
 ```
 
-## Step 4 — Instruct the user
+## Step 4 — Open terminal tabs
+
+Open a Terminal window with three tabs, one per server alias:
+
+```bash
+osascript <<'EOF'
+tell application "Terminal"
+  activate
+  do script "playable"
+  delay 0.5
+  tell application "System Events"
+    tell process "Terminal"
+      keystroke "t" using command down
+    end tell
+  end tell
+  delay 0.5
+  do script "backend" in selected tab of front window
+  delay 0.5
+  tell application "System Events"
+    tell process "Terminal"
+      keystroke "t" using command down
+    end tell
+  end tell
+  delay 0.5
+  do script "frontend" in selected tab of front window
+end tell
+EOF
+```
+
+## Step 5 — Instruct the user
 
 Tell the user:
 
-> Interview environment is ready. Open **three separate terminals** and run one alias in each:
->
-> | Terminal | Command |
-> |----------|---------|
-> | 1 | `playable` |
-> | 2 | `backend` |
-> | 3 | `frontend` |
->
-> Then open **http://localhost:5173** to start the session.
+> Interview environment is ready. Servers are starting in Terminal — then open **http://localhost:5173** to start the session.
