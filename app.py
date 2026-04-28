@@ -75,7 +75,7 @@ async def history():
 @app.get("/playable")
 async def playable():
     return {
-        "url": os.environ.get("PLAYABLE_URL", "http://localhost:5174"),
+        "url": os.environ.get("PLAYABLE_URL", "http://localhost:3000"),
         "aspect": os.environ.get("PLAYABLE_ASPECT", "9:16"),
     }
 
