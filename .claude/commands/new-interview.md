@@ -1,4 +1,4 @@
-Set up a fresh interview session. Do all four steps in order.
+Set up a fresh interview session. Do all five steps in order.
 
 ## Step 0 — Kill any running servers
 
@@ -33,7 +33,15 @@ In `/Users/sett/interview/tiki_solitaire_1_replica`:
 3. If there are uncommitted changes **and** the branch is not `original`, stage and commit everything with a message like `"wip: end of interview session"`.
 4. Checkout `original` and pull the latest (`git checkout original && git pull`).
 
-## Step 3 — Instruct the user
+## Step 3 — Open PyCharm
+
+Open the `playable-studio-interview` repo in PyCharm:
+
+```bash
+open -a "PyCharm" /Users/sett/interview/playable-studio-interview
+```
+
+## Step 4 — Instruct the user
 
 Tell the user:
 
