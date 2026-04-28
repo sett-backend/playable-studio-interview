@@ -1,4 +1,4 @@
-Set up a fresh interview session. Do all six steps in order.
+Set up a fresh interview session. Do all seven steps in order.
 
 ## Step 0 — Kill any running servers
 
@@ -72,8 +72,16 @@ end tell
 EOF
 ```
 
-## Step 5 — Instruct the user
+## Step 5 — Open the app
+
+Open the app in the browser:
+
+```bash
+open http://localhost:5173
+```
+
+## Step 6 — Instruct the user
 
 Tell the user:
 
-> Interview environment is ready. Servers are starting in Terminal — then open **http://localhost:5173** to start the session.
+> Interview environment is ready. Servers are starting — the app will be at **http://localhost:5173**.
