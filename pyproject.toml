@@ -3,15 +3,21 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "sett-chat"
+name = "playable-studio-interview"
 version = "0.1.0"
-description = "Simple chat UI powered by agent-wrapper"
+description = "Playable Studio — chat UI with an embedded developer agent"
 requires-python = ">=3.10"
 dependencies = [
-    "agent-wrapper @ file:///Users/meitalavitan/agent-wrapper",
+    "claude-agent-sdk>=0.1.24",
+    "pydantic>=2.0.0",
+    "pyyaml>=6.0",
     "fastapi>=0.115.0",
     "uvicorn>=0.30.0",
 ]
 
 [project.scripts]
-sett-chat = "app:main"
+playable-studio = "app:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["agent_wrapper*"]
