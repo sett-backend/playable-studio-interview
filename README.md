@@ -11,7 +11,7 @@
 - Python 3.10+
 - Node.js 18+ and npm
 - An `ANTHROPIC_API_KEY`
-- A running playable server (by default, something serving at `http://localhost:3000`)
+- The playable repo cloned locally: [`sett-backend/slime-solitaire`](https://github.com/sett-backend/slime-solitaire) (served at `http://localhost:3000`)
 
 ## Configuration
 
@@ -47,7 +47,16 @@ You need **three** processes running at the same time: the playable, the backend
 
 ### 1. Playable server
 
-Start whatever serves your playable on `PLAYABLE_URL` (default `http://localhost:3000`).
+Clone and run [`sett-backend/slime-solitaire`](https://github.com/sett-backend/slime-solitaire):
+
+```bash
+git clone https://github.com/sett-backend/slime-solitaire.git
+cd slime-solitaire
+npm install
+npm run dev
+```
+
+This serves the playable on `http://localhost:3000` (the default `PLAYABLE_URL`).
 
 ### 2. Backend
 
