@@ -39,8 +39,6 @@ class Storage:
         keys = []
         for p in base.rglob("*"):
             if p.is_file():
-                # Storage keys are logical (always forward-slash), not OS paths.
-                # On Windows, str(relative_to(...)) yields backslashes, which
-                # breaks downstream key parsing (e.g. ChatManager splits on "/").
+                # Logical keys are always forward-slash; ChatManager splits on "/".
                 keys.append(p.relative_to(self.root).as_posix())
         return keys

@@ -38,13 +38,7 @@ _load_env(ENV_PATH)
 
 
 def _resolve_playable_path() -> Path:
-    """Resolve the playable repo path from PLAYABLE_PATH; fail loudly if unset.
-
-    The dev agent edits files in this directory, so it must be the local clone
-    of the playable being iterated on (e.g. slime-solitaire). Without this, the
-    agent would silently fall back to the FastAPI process's cwd and produce
-    irrelevant output.
-    """
+    """Resolve PLAYABLE_PATH to an existing directory; raise if unset or invalid."""
     raw = os.environ.get("PLAYABLE_PATH")
     if not raw:
         raise RuntimeError(
