@@ -19,9 +19,12 @@ Create a `.env` file (or export the variables in your shell):
 
 ```bash
 ANTHROPIC_API_KEY=sk-ant-...
-PLAYABLE_URL=http://localhost:3000   # URL the right-pane iframe loads
-PLAYABLE_ASPECT=9:16                 # aspect ratio of the preview pane
+PLAYABLE_PATH=/abs/path/to/slime-solitaire   # local clone of the playable repo; dev agent runs here
+PLAYABLE_URL=http://localhost:3000           # URL the right-pane iframe loads
+PLAYABLE_ASPECT=9:16                         # aspect ratio of the preview pane
 ```
+
+`PLAYABLE_PATH` is required — the backend refuses to start without it. It must point to an existing directory containing the playable repo (the same checkout the playable server in step 1 below serves from).
 
 ## Install
 

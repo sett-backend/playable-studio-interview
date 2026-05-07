@@ -37,6 +37,29 @@ def _load_env(path: Path) -> None:
 _load_env(ENV_PATH)
 
 
+def _resolve_playable_path() -> Path:
+    """Resolve the playable repo path from PLAYABLE_PATH; fail loudly if unset.
+
+    The dev agent edits files in this directory, so it must be the local clone
+    of the playable being iterated on (e.g. slime-solitaire). Without this, the
+    agent would silently fall back to the FastAPI process's cwd and produce
+    irrelevant output.
+    """
+    raw = os.environ.get("PLAYABLE_PATH")
+    if not raw:
+        raise RuntimeError(
+            "PLAYABLE_PATH is not set. Add it to .env or export it — it must "
+            "point to the local clone of the playable repo (the directory the "
+            "dev agent runs in)."
+        )
+    path = Path(raw).expanduser().resolve()
+    if not path.is_dir():
+        raise RuntimeError(
+            f"PLAYABLE_PATH={raw!r} does not point to an existing directory."
+        )
+    return path
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global _agent, _svc
@@ -45,6 +68,7 @@ async def lifespan(app: FastAPI):
         model="claude-sonnet-4-6",
         system_prompt="You are a helpful assistant. Be concise and clear.",
         permission_mode="bypassPermissions",
+        cwd=str(_resolve_playable_path()),
     )
     await _agent.connect()
     yield
