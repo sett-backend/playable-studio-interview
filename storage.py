@@ -39,5 +39,6 @@ class Storage:
         keys = []
         for p in base.rglob("*"):
             if p.is_file():
-                keys.append(str(p.relative_to(self.root)))
+                # Logical keys are always forward-slash; ChatManager splits on "/".
+                keys.append(p.relative_to(self.root).as_posix())
         return keys

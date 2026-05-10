@@ -26,15 +26,43 @@ ENV_PATH = Path(__file__).parent / ".env"
 def _load_env(path: Path) -> None:
     if not path.exists():
         return
-    for line in path.read_text().splitlines():
+    # utf-8-sig tolerates BOM-prefixed files saved by Windows Notepad.
+    for line in path.read_text(encoding="utf-8-sig").splitlines():
         line = line.strip()
         if not line or line.startswith("#") or "=" not in line:
             continue
         key, _, value = line.partition("=")
-        os.environ.setdefault(key.strip(), value.strip())
+        key = key.strip()
+        if key.startswith("export "):
+            key = key[len("export "):].lstrip()
+        if not key:
+            continue
+        value = value.strip()
+        # Strip a single matching pair of surrounding quotes so Windows paths
+        # with spaces (e.g. PLAYABLE_PATH="C:\Program Files\repo") work.
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in ("'", '"'):
+            value = value[1:-1]
+        os.environ.setdefault(key, value)
 
 
 _load_env(ENV_PATH)
+
+
+def _resolve_playable_path() -> Path:
+    """Resolve PLAYABLE_PATH to an existing directory; raise if unset or invalid."""
+    raw = os.environ.get("PLAYABLE_PATH")
+    if not raw:
+        raise RuntimeError(
+            "PLAYABLE_PATH is not set. Add it to .env or export it — it must "
+            "point to the local clone of the playable repo (the directory the "
+            "dev agent runs in)."
+        )
+    path = Path(raw).expanduser().resolve()
+    if not path.is_dir():
+        raise RuntimeError(
+            f"PLAYABLE_PATH={raw!r} does not point to an existing directory."
+        )
+    return path
 
 
 @asynccontextmanager
@@ -45,6 +73,7 @@ async def lifespan(app: FastAPI):
         model="claude-sonnet-4-6",
         system_prompt="You are a helpful assistant. Be concise and clear.",
         permission_mode="bypassPermissions",
+        cwd=str(_resolve_playable_path()),
     )
     await _agent.connect()
     yield
