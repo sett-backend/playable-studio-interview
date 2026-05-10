@@ -31,7 +31,11 @@ In `/Users/sett/interview/tiki_solitaire_1_replica`:
 1. Check the current branch (`git branch --show-current`).
 2. Check for uncommitted changes (`git status --short`).
 3. If there are uncommitted changes **and** the branch is not `original`, stage and commit everything with a message like `"wip: end of interview session"`.
-4. Checkout `original` and pull the latest (`git checkout original && git pull`).
+4. Checkout `original`, pull the latest, and hard-reset to origin so any local-only commits (e.g. agent snapshots) are discarded:
+
+```bash
+git checkout original && git pull && git reset --hard origin/original
+```
 
 ## Step 3 — Open PyCharm
 
