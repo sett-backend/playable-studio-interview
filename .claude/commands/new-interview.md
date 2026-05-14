@@ -1,4 +1,4 @@
-Set up a fresh interview session. Do all seven steps in order.
+Set up a fresh interview session. Do all eight steps in order.
 
 ## Step 0 — Kill any running servers
 
@@ -24,7 +24,16 @@ Delete everything inside `playable-studio-interview/chat_root/` but leave the di
 rm -rf /Users/sett/interview/playable-studio-interview/chat_root/*
 ```
 
-## Step 2 — Reset tiki_solitaire_1_replica
+## Step 2 — Reset playable-studio-interview
+
+Discard all interviewee changes in the studio repo — this is intentional, do not save anything:
+
+```bash
+git -C /Users/sett/interview/playable-studio-interview reset --hard HEAD
+git -C /Users/sett/interview/playable-studio-interview clean -fd
+```
+
+## Step 3 — Reset tiki_solitaire_1_replica
 
 In `/Users/sett/interview/tiki_solitaire_1_replica`:
 
@@ -33,7 +42,7 @@ In `/Users/sett/interview/tiki_solitaire_1_replica`:
 3. If there are uncommitted changes **and** the branch is not `original`, stage and commit everything with a message like `"wip: end of interview session"`.
 4. Checkout `original` and pull the latest (`git checkout original && git pull`).
 
-## Step 3 — Open PyCharm
+## Step 4 — Open PyCharm
 
 Open the `playable-studio-interview` repo in PyCharm:
 
@@ -41,7 +50,7 @@ Open the `playable-studio-interview` repo in PyCharm:
 open -a "PyCharm" /Users/sett/interview/playable-studio-interview
 ```
 
-## Step 4 — Open terminal tabs
+## Step 5 — Open terminal tabs
 
 Open a Terminal window with three tabs, one per server alias:
 
@@ -72,7 +81,7 @@ end tell
 EOF
 ```
 
-## Step 5 — Open the app
+## Step 6 — Open the app
 
 Open the app in the browser:
 
@@ -80,7 +89,7 @@ Open the app in the browser:
 open http://localhost:5173
 ```
 
-## Step 6 — Instruct the user
+## Step 7 — Instruct the user
 
 Tell the user:
 
